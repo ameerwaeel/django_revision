@@ -1,0 +1,244 @@
+#راجع انواع ال     function مع بايثون ارابيا وما قبل الداتا بيز وما بعدها 
+#وراجع الفرق بين ال     generics في     listcreateAPIView وانك تبني فانكشن عاديه وتستدعي فيها listcreateAPIView   
+#configrations in settings.py اي هي للريست فرام ورك + pip install ?   
+#1-git\2-oop\3-search of topic in django in paper\4-docker
+************************************************************************
+-extensions in vs code (copy django models fieldes)
+-operations code
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py runserver
+-method
+(post/get/put/delete/put/patch)
+-configrations in settings.py
+                            ---------------------
+                            |django serializers |
+                            ---------------------
+-class name (serializers.modelserializer)
+    class meta:
+        -model=
+        -fieldes=['','']/'__all__'
+-----------------------------------------------------------------------------------------------------------------------
+                        ---------------------------
+                        |type of views in django  |
+                        ---------------------------
+1-function based views (api_view[decorators])
+2-class based views (APIView/generics/ViewSet/Mixins)       
+-----------------------------------------------------------------------------------------------------------------------
+                            --------------------------
+                            |function views(api_view)|
+                            --------------------------
+-from django.shortcuts import render,get_object_or_404
+-from restframework.decorators import api_view
+-from restframework.response import Response
+-from .serializers import *
+-from app.models import *
+-from restframework.stauts import http_204_no_content
+
+@api_view(['GET','POST'])
+def api_products(request):
+    if request.method=="GET":
+        -products=products.objects.all()
+        -serializers=productserializers(products,many=true)
+        -return Response(serializers.data)
+    if request.method=="POST":  
+        -serializers=productserializers(data=request.data)
+        -if serializers.is_valid():
+            -serializer.save()
+            -return Response(serializers.data) >دا بينفذ ويحفظ علطول  
+    return Response(serializers.data) > دا الي بيخرج الريسبونس اللي عملتو في الحالتين باعت صح او غلط 
+------------------------------
+path('products',api_products)
+------------------------------
+@api_view(['GET','PUT','DELETE'])
+def api_product(request,pk):
+    -products=get_object_or_404(id=pk)
+    -if request.method=="GET":
+        -serializers=productserializers(products)
+        -return Response(serializers.data)
+    -if request.method=="PUT":
+        -serializers=productserializers(data=request.data)
+        -serializers.is_valid(raies_exception=true)
+        -serializer.save()
+        -return Response(serializers.data)
+    -if request.method=="DELETE":
+        -product.delete()
+        -return Response(status=status.http_204_no_content)
+----------------------------------------
+path('product/<str:pk>',api_product)
+----------------------------------------
+    **********************
+    ممكن استبدل الجزء دا 
+    if request.method=="POST":  
+        -serializers=productserializers(data=request.data)
+            -if serializers.is_valid():
+                -serializer.save()
+                -return Response(serializers.data)
+    يبقي كده 
+    if request.method=="POST":     
+        -serializers=productserializers(data=request.data)
+            -serializers.is_valid(raies_exception=true)
+            -serializer.save()
+            -return Response(serializers.data)
+    **********************
+-----------------------------------------------------------------------------------------------------------------------
+                            ----------------------
+                            |class views(APIView)|
+                            ----------------------
+-from restframework.views import APIView
+
+class APIProducts(APIView):
+    def get(self,request):
+        -products=products.objects.all()
+        -serializers=productserializers(products,many=true)
+        -return Response(serializers.data)
+    def post(self,request):
+        -serializers=productserializers(data=request.data)
+        -serializers.is_valid(raies_exception=true)
+        -serializer.save()
+        -return Response(serializers.data)
+
+---------------------------------------
+path('products/',APIProducts.as_view())        
+-----------------------------------------
+class APIProduct(APIView):
+    def get(self,request,pk):
+        -products=get_object_or_404(id=pk)
+        -serializers=productserializers(products)
+        -return Response(serializers.data)
+    def put(self,request,pk):
+        -products=get_object_or_404(id=pk)
+        -serializers=productserializers(data=request.data)
+        -serializers.is_valid(raies_exception=true)
+        -serializer.save()
+        -return Response(serializers.data)
+    def delete(self,request,pk): 
+        -products=get_object_or_404(id=pk)       
+        -product.delete()
+        -return Response(status=status.http_204_no_content)
+----------------------------------------
+path('product/<str:pk>',APIProduct.as_view()) 
+----------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+                            -----------------------
+                            |class views(generics)|
+                            -----------------------
+-from restframework.generics import listcreateAPIView,retriveupdatedestroyAPIView
+
+class APIProducts(listcreateAPIView):
+    queryset = products.objects.all()
+    serializers=productserializers
+
+---------------------------------------
+path('products/',APIProducts.as_view())        
+-----------------------------------------
+class APIProduct(retriveupdatedestroyAPIView):
+    queryset = products.objects.all()
+    serializers=productserializers
+
+----------------------------------------
+path('product/<str:pk>',APIProduct.as_view()) 
+----------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+                            -----------------------
+                            |class views(ViewSet)|
+                            -----------------------
+-from restframework.ViewSets import modelViewSet
+
+class APIProducts(modelViewSet):
+    queryset = products.objects.all()
+    serializers=productserializers
+
+---------------------------------------
+-from restframework.routers import DefaultRouter
+-from .views import *
+-from django.urls import path,include
+-router=DefaultRouter()
+-router.register('products',APIProducts)
+-path('',include(router.urls))
+---------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+                            ---------------
+                            |class views(Mixins)|
+                            ---------------
+
+************************************************************
+                            ---------------
+                            |django filter|
+                            ---------------
+-pip install django-filter
+-INSTALLED_APPS = [
+    ...
+    'django_filters',
+]
+-from django_filters.restframework import DjangoFilterBackend
+
+class APIProducts(modelViewSet):
+    queryset = products.objects.all()
+    serializers=productserializers
+    filter_backends=[DjangoFilterBackend]
+    filterset_fields=['uuid','name']
+
+
+http://localhost:8000/product/?uuid=    
+http://localhost:8000/product/?name= 
+
+----------------------   
+|new file > filter.py|
+----------------------
+-from django_filters.restframework import FilterSet
+-from .models import *
+
+class ProductFilter(FilterSet):
+    class Meta:
+        model=Product
+        fieldes={
+        'uuid':['exact'],
+        'price':['gt','lt']
+        }
+
+-in views.py 
+-from .filter import *
+
+class APIProducts(modelViewSet):
+    queryset = products.objects.all()
+    serializers=productserializers
+    filter_backends=[DjangoFilterBackend]
+    filterset_class=ProductFilter
+
+http://localhost:8000/product/?uuid=126612635824851dsdhfcvh55441d&price__gt=100&price__lt=50
+
+**********************************************************
+                            ---------------
+                            |django search|
+                            ---------------
+-from restframework.filters import SearchFilter,OrderingFilter                             
+
+class APIProducts(modelViewSet):
+    queryset = products.objects.all()
+    serializers=productserializers
+    filter_backends=[DjangoFilterBackend,SearchFilter,OrderingFilter]
+    filterset_class=ProductFilter
+    search_fields=['name',description] >>> في السرش مثلا اكتب حرفين هيجبلك كل المنتجات اللي فيها نفس الحرفين مثلا وهكذا 
+    ordering_fields=['price']  >>>هيرتبلك المنتجات بالترتيب اللي تختاره 
+
+
+http://localhost:8000/product/?search=am
+http://localhost:8000/product/?ordering=price&search=am
+http://localhost:8000/product/?ordering=-price&search=am
+******************************************************************************
+git 
+
+-all tols for  commit to connect in rebo like github,gitlab,bitbucket
+-download git
+-new repo for new project
+-in cmd in project folder
+-git init
+-git config user.name "ameerwaeel"
+-git config user.email "ameer.waeel99@gmail.com"
+لو عايزو جلوبال ثابت لكلو 
+-git config --global user.name "ameerwaeel"
+-git config --global user.email "ameer.waeel99@gmail.com"
+-git status
+-git add . (or)  git add file_or_folder_name.txt
+-git commit -m "added new file"
