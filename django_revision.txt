@@ -3,7 +3,9 @@
 #configrations in settings.py اي هي للريست فرام ورك + pip install ?   
 #1-git\2-oop\3-search of topic in django in paper\4-docker
 ************************************************************************
--extensions in vs code (copy django models fieldes)
+-extensions in vs code 
+(copy django models fieldes) (GitLens) (Git History)
+
 -operations code
 python3 manage.py makemigrations
 python3 manage.py migrate
@@ -249,4 +251,13 @@ git
 -git checkout commit_id
 لو عايز تشتغل علي اخر فيرجن موجوده اكتب 
 -git checkout master
--
+-gui in vs code 
+بستخدما واي تعديل وفايل وكود بعملو بدوس علي علامه + وببوش الفايلات دي بكوميت وبكتب اسمو 
+-لو شغال علي فايلات بس لسا فيها فيرجن تحديث فبكريت برنش مختلف من البرنش الاساسي 
+-git checkout -b branch_name -->to create new branch
+-لو عملت برنش وانت واقف علي  master or main 
+ وعايز انفذ ميرج للبرنشات مع  master or main 
+-git checkout master 
+-git merge branch_name
+
+-git repository (public / private)
