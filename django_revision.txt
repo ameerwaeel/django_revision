@@ -249,7 +249,4 @@ git
 -git checkout commit_id
 لو عايز تشتغل علي اخر فيرجن موجوده اكتب 
 -git checkout master
--git remote add origin git@github.com:ameerwaeel/django_revision.git
--git branch -m master main عشان تخلي الماستر مين عندك ودا الاساسي
--git push -u origin main
-
+-
