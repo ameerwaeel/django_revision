@@ -242,3 +242,14 @@ git
 -git status
 -git add . (or)  git add file_or_folder_name.txt
 -git commit -m "added new file"
+-git log -v عشان تقدر تعرف الكوميت اللي اتعملت واتغيرت ومين اللي مكريتها 
+-git log -v لو في كذا كوميت هيظهرهم 
+والكوميت اللي عليه (head ->master) دا اللي بيبقي اخر فيرجن شغاله ومعتمده 
+لو عايز ارجع لفرجن تانيه او كوميت تاني بكتب الامر دا 
+-git checkout commit_id
+لو عايز تشتغل علي اخر فيرجن موجوده اكتب 
+-git checkout master
+-git remote add origin git@github.com:ameerwaeel/django_revision.git
+-git branch -m master main عشان تخلي الماستر مين عندك ودا الاساسي
+-git push -u origin main
+
